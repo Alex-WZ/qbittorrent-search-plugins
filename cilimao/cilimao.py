@@ -1,5 +1,5 @@
-#VERSION: 1.00
-#AUTHORS: Alex WZ (wenzhen.ly@gmail.com)
+# VERSION: 1.00
+# AUTHORS: Alex WZ (wenzhen.ly@gmail.com)
 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -50,6 +50,7 @@ class cilimao(object):
     def search(self, what, cat='all'):
         page = 1
         while page < 11:
+            print(page)
             query = "".join((self.url, "&word=", quote(what),
                              "&resourceType=", self.supported_categories[cat]))
             if page > 1:
@@ -73,12 +74,10 @@ class cilimao(object):
                 dict["seeds"] = ''
                 dict[''] = ('https://www.cilimao.me/information/' + item['infohash'])
                 prettyPrinter(dict)
-
-        total_page = resp['data']['result']['total_pages']
-
-        if page > total_page:
+            page += 1
+            total_page = resp['data']['result']['total_pages']
+            if page > total_page:
                 return
-        page += 1
 
 
 if __name__ == '__main__':

@@ -26,43 +26,38 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 
-import json
 from urllib.parse import quote
-
-from helpers import download_file, retrieve_url
+from helpers import retrieve_url
 from novaprinter import prettyPrinter
+import json
+
 
 class cilimao(object):
+    """ Search engine class """
     name = 'cilimao'
-    url = 'https://www.cilimao.me/api/search?size=10&sortDirections=desc&resourceType=1' \
-          '&resourceSource=0&sortProperties=download_count'
-    supported_categories = {
-                            'all': '0',
-                            'movies': '1',
-                            'music': '2',
-                            'books': '4'
-                            }
-
-
-    def download_torrent(self, info):
-        print(download_file(info))
+    url = 'https://www.cilimao.me'
+    supported_categories = {'all': 'all', 'movies': '1', 'music': '2', 'books': '4'}
 
     def search(self, what, cat='all'):
+        """ Performs search """
         page = 1
         while page < 11:
             print(page)
-            query = "".join((self.url, "&word=", quote(what),
-                             "&resourceType=", self.supported_categories[cat]))
+            query = "".join((self.url, "/api/search?size=10&sortDirections=desc&sortProperties=download_count",
+                             "&resourceType=1&resourceSource=0", "&word=", quote(what)))
             if page > 1:
                 query = query + "&page=" + str(page)
             response = retrieve_url(query)
+            if response == '':
+                continue
+
             resp = json.loads(response)
             if resp['status'] != 'ok':
                 return
             if len(resp['data']) == 0:
                 return
             if len(resp['data']['result']['content']) == 0:
-                return 
+                return
             for item in resp['data']['result']['content']:
                 if item == 'ad':
                     continue
@@ -72,14 +67,15 @@ class cilimao(object):
                 dict["link"] = ("magnet:?xt=urn:btih:" + item['infohash'])
                 dict["leech"] = ''
                 dict["seeds"] = ''
-                dict[''] = ('https://www.cilimao.me/information/' + item['infohash'])
+                dict['desc_link'] = ('https://www.cilimao.me/information/' + item['infohash'])
                 prettyPrinter(dict)
             page += 1
             total_page = resp['data']['result']['total_pages']
             if page > total_page:
                 return
+        return
 
 
 if __name__ == '__main__':
     cilimao = cilimao()
-    cilimao.search('西游记', 'all')
+    cilimao.search('The Godfather', 'all')

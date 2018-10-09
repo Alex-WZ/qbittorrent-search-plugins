@@ -63,7 +63,7 @@ class cilimao(object):
                     continue
                 dict = dict = {"engine_url": self.url}
                 dict['name'] = item['title']
-                dict["size"] = (str(item['content_size']) + ' KB')
+                dict["size"] = (str(item['content_size']) + ' B')
                 dict["link"] = ("magnet:?xt=urn:btih:" + item['infohash'])
                 dict["leech"] = ''
                 dict["seeds"] = ''

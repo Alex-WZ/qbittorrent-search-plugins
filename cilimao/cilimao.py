@@ -42,7 +42,6 @@ class cilimao(object):
         """ Performs search """
         page = 1
         while page < 11:
-            print(page)
             query = "".join((self.url, "/api/search?size=10&sortDirections=desc&sortProperties=download_count",
                              "&resourceType=1&resourceSource=0", "&word=", quote(what)))
             if page > 1:
@@ -64,7 +63,7 @@ class cilimao(object):
                 dict = dict = {"engine_url": self.url}
                 dict['name'] = item['title']
                 dict["size"] = (str(item['content_size']) + ' B')
-                dict["link"] = ("magnet:?xt=urn:btih:" + item['infohash'])
+                dict["link"] = ("magnet:?xt=urn:btih:" + item['infohash'] + "&dn=" + item['title'])
                 dict["leech"] = ''
                 dict["seeds"] = ''
                 dict['desc_link'] = ('https://www.cilimao.me/information/' + item['infohash'])
